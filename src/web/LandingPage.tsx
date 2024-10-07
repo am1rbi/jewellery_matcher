@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
 import { useFunnelContext } from './FunnelContext';
+// import diamondImage from './src/misc/diamond.jpg'; // Make sure to import your image
+const diamondImage = require('../misc/diamond.jpg');
 
 const LandingPage: React.FC = () => {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -95,13 +97,16 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="landing-page" dir="rtl">
-      <header>
-        <div className="logo">Gold & Gem</div>
-        <nav>
-          <a href="#features">תכונות</a>
-          <a href="#about">אודות</a>
-        </nav>
-      </header>
+    <div className="diamond-container">
+      <img src={diamondImage} alt="Diamond" className="diamond-image" />
+    </div>
+    <header>
+      <div className="logo">Gold & Gem</div>
+      <nav>
+        <a href="#features">תכונות</a>
+        <a href="#about">אודות</a>
+      </nav>
+    </header>
       <main>
         <div className="hero">
           <h1>בתכלס, היא כבר בחרה את התכשיט שהיא רוצה. תן לנו למצוא אותו בשבילך.</h1>

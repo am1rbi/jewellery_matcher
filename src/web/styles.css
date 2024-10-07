@@ -41,6 +41,27 @@ body {
   direction: rtl;
 }
 
+.diamond-container {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1; /* Place it behind other content */
+}
+
+.diamond-image {
+  position: absolute;
+  left: -25%; /* Pull it slightly off-screen to the left */
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+  width: 100%; /* Adjust size as needed */
+  height: auto;
+  opacity: 0.2; /* Make it somewhat transparent */
+}
+
 /* Landing Page Styles */
 header {
   display: flex;
@@ -67,9 +88,12 @@ nav a:hover {
 }
 
 main {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  padding-left: 20%;
 }
 
 .hero {
@@ -209,6 +233,12 @@ p {
 .funnel-page {
   position: relative;
   padding-top: 40px;
+}
+
+.progress-container {
+  position: relative;
+  padding-top: 20px; /* Add padding to the top of the container */
+  width: 100%;
 }
 
 .progress-bar {
@@ -360,6 +390,11 @@ button:hover {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+  .diamond-container {
+    left: -50%;
+    width: 100%;
+  }
+
   main {
     flex-direction: column;
   }
