@@ -4,7 +4,7 @@ import { useFunnelContext } from './FunnelContext';
 import './funnel.css';
 
 const SuccessPage: React.FC = () => {
-  const { firstName, lastName, phoneNumber, lowerBound, upperBound, dueDate, specificDate, uploadedImage } = useFunnelContext();
+  const { firstName, lastName, phoneNumber, lowerBound, upperBound, dueDate, specificDate, uploadedImages } = useFunnelContext();
 
   const formatBudget = (value: number) => {
     return `₪${value.toLocaleString('he-IL')}`;
@@ -47,10 +47,14 @@ const SuccessPage: React.FC = () => {
           <p><strong>מספר טלפון:</strong> {phoneNumber}</p>
           <p><strong>טווח תקציב:</strong> {formatBudget(lowerBound)} - {formatBudget(upperBound)}</p>
           <p><strong>מועד רצוי:</strong> {getDueDateText()}</p>
-          {uploadedImage && (
+          {uploadedImages.length > 0 && (
             <div>
-              <p><strong>תמונה שהועלתה:</strong></p>
-              <img src={uploadedImage} alt="Uploaded jewelry" style={{ maxWidth: '100%', maxHeight: '200px', objectFit: 'contain' }} />
+              <p><strong>תמונות שהועלו:</strong></p>
+              <div className="uploaded-images-grid">
+                {uploadedImages.map((image, index) => (
+                  <img key={index} src={image} alt={`תכשיט שהועלה ${index + 1}`} className="uploaded-image" />
+                ))}
+              </div>
             </div>
           )}
         </div>

@@ -8,20 +8,69 @@ const LandingPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { setUploadedImage } = useFunnelContext();
+  const { uploadedImages, setUploadedImages } = useFunnelContext();
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files && files.length > 0) {
-      const file = files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const imageDataUrl = reader.result as string;
-        setSelectedImages([imageDataUrl]);
-        setUploadedImage(imageDataUrl);
-      };
-      reader.readAsDataURL(file);
+    if (files) {
+      const newImages: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        try {
+          const resizedImage = await resizeImage(file);
+          newImages.push(resizedImage);
+        } catch (error) {
+          console.error('Error processing image:', error);
+        }
+      }
+      setSelectedImages(prevImages => [...prevImages, ...newImages]);
+      setUploadedImages([...uploadedImages, ...newImages]);
     }
+  };
+
+  const resizeImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Failed to get canvas context'));
+            return;
+          }
+
+          // Calculate new dimensions
+          const maxWidth = 800;
+          const maxHeight = 600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          ctx.drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.7)); // Reduce quality to 70%
+        };
+        img.onerror = reject;
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleUploadClick = () => {
@@ -38,6 +87,12 @@ const LandingPage: React.FC = () => {
     }
   };
 
+  const handleRemoveImage = (index: number) => {
+    setSelectedImages(prevImages => prevImages.filter((_, i) => i !== index));
+    const newUploadedImages = uploadedImages.filter((_, i) => i !== index);
+    setUploadedImages(newUploadedImages);
+  };
+
   return (
     <div className="landing-page" dir="rtl">
       <header>
@@ -50,8 +105,8 @@ const LandingPage: React.FC = () => {
       <main>
         <div className="hero">
           <h1>בתכלס, היא כבר בחרה את התכשיט המושלם. תן לנו למצוא אותו בשבילך.</h1>
-          <p>Gold & Gem כאן כדי לחסוך לך זמן וכאב ראש. שתף איתנו תמונה של התכשיט שהיא בחרה, ותן לאפליקציה מבוססת ה-AI שלנו למצוא לך אותו ברבע מהזמן שלוקח לך להגיע לבורסה ברמת גן. 
-            איכות? יש. מחיר הוגן? ברור. התכשיט המושלם במרחק תמונה אחת ממך!</p>
+          <p>Gold & Gem כאן כדי לחסוך לך זמן וכאב ראש. שתף איתנו תמונות של התכשיט שהיא בחרה, ותן לאפליקציה מבוססת ה-AI שלנו למצוא לך אותו ברבע מהזמן שלוקח לך להגיע לבורסה ברמת גן. 
+            איכות? יש. מחיר הוגן? ברור. התכשיט המושלם במרחק תמונות ממך!</p>
           <div className="cta-buttons">
             <input
               type="file"
@@ -59,6 +114,7 @@ const LandingPage: React.FC = () => {
               onChange={handleImageChange}
               ref={fileInputRef}
               style={{ display: 'none' }}
+              multiple
             />
             <button className="icon-btn upload-btn" onClick={handleUploadClick} aria-label="העלאת תמונות">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -74,6 +130,7 @@ const LandingPage: React.FC = () => {
               onChange={handleImageChange}
               ref={cameraInputRef}
               style={{ display: 'none' }}
+              multiple
             />
             <button className="icon-btn camera-btn" onClick={handleCameraClick} aria-label="צילום תמונה">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -89,6 +146,7 @@ const LandingPage: React.FC = () => {
               {selectedImages.map((image, index) => (
                 <div key={index} className="image-container">
                   <img src={image} alt={`תכשיט נבחר ${index + 1}`} className="preview-image" />
+                  <button className="remove-btn" onClick={() => handleRemoveImage(index)}>×</button>
                 </div>
               ))}
             </div>
@@ -97,7 +155,7 @@ const LandingPage: React.FC = () => {
       </main>
       {selectedImages.length > 0 && (
         <button className="continue-button" onClick={handleContinueClick}>
-          #התחלנו
+          קדימה לעבודה!
         </button>
       )}
     </div>

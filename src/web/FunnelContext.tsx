@@ -15,8 +15,8 @@ interface FunnelContextType {
   setDueDate: (date: string) => void;
   specificDate: string;
   setSpecificDate: (date: string) => void;
-  uploadedImage: string | null;
-  setUploadedImage: (image: string | null) => void;
+  uploadedImages: string[];
+  setUploadedImages: (images: string[]) => void;
 }
 
 const FunnelContext = createContext<FunnelContextType | undefined>(undefined);
@@ -29,7 +29,7 @@ export const FunnelProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [upperBound, setUpperBound] = useState(10000);
   const [dueDate, setDueDate] = useState('');
   const [specificDate, setSpecificDate] = useState('');
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   return (
     <FunnelContext.Provider
@@ -48,8 +48,8 @@ export const FunnelProvider: React.FC<{ children: ReactNode }> = ({ children }) 
         setDueDate,
         specificDate,
         setSpecificDate,
-        uploadedImage,
-        setUploadedImage,
+        uploadedImages,
+        setUploadedImages,
       }}
     >
       {children}
