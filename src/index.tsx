@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import HomePage from './web/LandingPage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import App from './web/App';
+import './web/styles.css';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <HomePage />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>
 );
