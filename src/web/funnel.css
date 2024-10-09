@@ -9,7 +9,7 @@
 .progress-container {
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
   flex-direction: row-reverse; /* Reverse the direction */
 }
 
@@ -29,10 +29,15 @@
 }
 
 .back-button {
-  background-color: transparent;
+  position: absolute;
+  /* top: 5px; */
+  right: 5px; /* Changed from left to right */
+  /* padding: 5px 10px; */
+  background-color: #f0f0f0;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
-  padding: 0;
+  z-index: 10; 
 }
 
 .back-button svg {
