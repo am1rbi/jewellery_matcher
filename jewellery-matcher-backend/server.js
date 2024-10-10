@@ -26,18 +26,15 @@ if (!MONGODB_URI) {
   process.exit(1);
 }
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => {
-  console.log('Connected to MongoDB');
-  console.log('Database Name:', mongoose.connection.name);
-})
-.catch((err) => {
-  console.error('Error connecting to MongoDB:', err);
-  process.exit(1);
-});
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    console.log('Database Name:', mongoose.connection.name);
+  })
+  .catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+    process.exit(1);
+  });
 
 mongoose.connection.on('error', err => {
   console.error('MongoDB connection error:', err);

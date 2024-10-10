@@ -12,7 +12,6 @@
     "start:backend": "cd jewellery-matcher-backend && HOST=0.0.0.0 node server.js",
     "dev": "concurrently \"npm:start:frontend\" \"npm:start:backend\" --names \"FRONTEND,BACKEND\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" --prefix \"[{name}]\" --timestamp"
   },
-  
   "proxy": "https://shiny-space-zebra-xqrxj75644q2v755-5000.preview.app.github.dev",
   "keywords": [],
   "author": "",
@@ -20,7 +19,10 @@
   "dependencies": {
     "@types/node-fetch": "^2.6.11",
     "@types/react-router-dom": "^5.3.3",
+    "dotenv": "^16.4.5",
     "helmet": "^8.0.0",
+    "mongodb": "^6.9.0",
+    "mongoose": "^8.7.1",
     "node-fetch": "^2.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
