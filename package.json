@@ -7,13 +7,21 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:frontend": "HOST=0.0.0.0 react-scripts start",
+    "start:backend": "cd jewellery-matcher-backend && HOST=0.0.0.0 node server.js",
+    "dev": "concurrently \"npm:start:frontend\" \"npm:start:backend\" --names \"FRONTEND,BACKEND\" --prefix-colors \"bgBlue.bold,bgGreen.bold\" --prefix \"[{name}]\" --timestamp"
   },
+  
+  "proxy": "https://shiny-space-zebra-xqrxj75644q2v755-5000.preview.app.github.dev",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node-fetch": "^2.6.11",
     "@types/react-router-dom": "^5.3.3",
+    "helmet": "^8.0.0",
+    "node-fetch": "^2.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
@@ -36,6 +44,7 @@
   "devDependencies": {
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.0",
+    "concurrently": "^6.2.0",
     "typescript": "^4.9.5"
   }
 }

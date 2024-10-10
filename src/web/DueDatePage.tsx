@@ -1,19 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowRight } from 'react-icons/fa';
-import { useFunnelContext } from './FunnelContext';
+import { useFunnelContext, FunnelData } from './FunnelContext';
 import './funnel.css';
 
 const DueDatePage: React.FC = () => {
   const navigate = useNavigate();
-  const { dueDate, setDueDate, specificDate, setSpecificDate } = useFunnelContext();
+  const { 
+    dueDate, setDueDate, specificDate, setSpecificDate,
+    firstName, lastName, phoneNumber, lowerBound, upperBound, uploadedImages,
+    submitFunnelData
+  } = useFunnelContext();
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleBackClick = () => {
     navigate('/budget');
   };
 
-  const handleContinueClick = () => {
-    navigate('/success');
+  const handleContinueClick = async () => {
+    setIsSubmitting(true);
+    setError(null);
+
+    if (!dueDate) {
+      setError('Please select a due date option');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (dueDate === 'specific' && !specificDate) {
+      setError('Please select a specific date');
+      setIsSubmitting(false);
+      return;
+    }
+
+    const funnelData: FunnelData = {
+      firstName,
+      lastName,
+      phoneNumber,
+      lowerBound,
+      upperBound,
+      dueDate,
+      specificDate,
+      uploadedImages
+    };
+
+    try {
+      await submitFunnelData(funnelData);
+      navigate('/success');
+    } catch (error: unknown) {
+      console.error('Error submitting data:', error);
+      if (error instanceof Error) {
+        setError(`An error occurred: ${error.message}. Please try again.`);
+      } else {
+        setError('An unknown error occurred. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -63,7 +108,15 @@ const DueDatePage: React.FC = () => {
             className="specific-date-input"
           />
         )}
-        <button className="continue-button" onClick={handleContinueClick}>המשך</button>
+        {error && <div className="error-message">{error}</div>}
+    <button 
+      className="continue-button" 
+      onClick={handleContinueClick}
+      disabled={isSubmitting}
+    >
+      {isSubmitting ? 'שולח...' : 'שלח'}
+    </button>
+    {error && <div className="error-message">{error}</div>}
       </div>
     </div>
   );
